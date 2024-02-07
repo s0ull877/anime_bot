@@ -34,6 +34,32 @@ headers = {
 #         print(ex)
 #         return False
 
+def valid_url_for_chan(msg: str):
+    msg_list = msg.split(' ')
+    
+    if len(msg_list) != 2:
+        return "Неправильный ввод команды: \n`/create_chan` {ссылка на аниме}"
+    
+    url = msg_list[-1]
+    pattern = r"https://jut\.su/.*/"
+
+    if not re.match(pattern, url):
+        return 'Некорректная ссылка. Нужна ссылка типа https://jut.su/anime_name/'
+
+    session = requests.session()
+    session.headers.update(headers)
+    req = session.get(url)
+    soup = bs4.BeautifulSoup(req.text,'lxml')
+
+    if req.status_code != 200:
+        return f'status code: {req.status_code}'
+
+    if soup.h1.text[:8] != 'Смотреть':
+        return 'Это вроде не ссылка на просмотр аниме.'
+
+    return url
+
+
 def parse_params(url: str):
 
     session = requests.session()
@@ -47,9 +73,12 @@ def parse_params(url: str):
 
         img_link = img_div[ptr.start():ptr.end()-1]
         tg_me = 'S0_' + img_link.split('/')[-1][:-4]
-        name = soup.h1.text[9:-10]
+        tg_me = tg_me.replace('-','_')
+        
+        name = soup.h1.text[9:]
+    
 
-        print(name, '\n', tg_me, '\n', img_link)
+        # print(name, '\n', tg_me, '\n', img_link)
         response = session.get(img_link)
         with open (r'core/client/temp/image.jpg', 'wb') as ph:
             ph.write(response.content)
@@ -65,4 +94,4 @@ def parse_params(url: str):
 
 
 if __name__ == '__main__':
-    parse_params('https://jut.su/oneepiece/')
+    print(parse_params('https://jut.su/berserk/'))

@@ -1,7 +1,10 @@
 from telethon.tl.functions import channels
 
+from telethon.tl.functions.channels import CreateChannelRequest, CheckUsernameRequest, UpdateUsernameRequest
+from telethon.tl.types import InputChannel, InputPeerChannel
 
-async def create_channel_private(channelName: str,channelDesc: str,desiredPublicUsername: str):
+async def create_channel_private(channelName: str,channelDesc: str,desiredPublicUsername: str, client):
+
     # channelName = 'Test_photo'
     # channelDesc = 'dskhajdhasj'
     # desiredPublicUsername = "skajsdksaja" #юзенейм канала 
@@ -17,3 +20,6 @@ async def create_channel_private(channelName: str,channelDesc: str,desiredPublic
     if(checkUsernameResult==True):
         publicChannel = await client(channels.UpdateUsernameRequest(InputPeerChannel(channel_id=newChannelID, access_hash=newChannelAccessHash), desiredPublicUsername))    
         channelPhoto = await client(channels.EditPhotoRequest(channelName,photo=await client.upload_file(r'core/client/temp/image.jpg')))
+
+        return f'Канал создан успешно. https://t.me/{desiredPublicUsername}'
+
