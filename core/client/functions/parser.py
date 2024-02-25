@@ -9,31 +9,6 @@ headers = {
     "User-Agent": ua.random
     }
 
-## will be in bot
-# def parse_video(url: str):
-
-#     session = requests.session()
-#     session.he    aders.update(headers)
-#     req = session.get(url)
-    
-#     try:
-#         soup = bs4.BeautifulSoup(req.text,'lxml')
-#         # with open('index.html', 'w') as f:
-#         #     f.write(req.text)
-#         video = soup.source['src']
-
-#         with open(r'core/client/temp/video.mp4', 'wb') as f:
-#             response = session.get(video, stream=True)
-            
-#             for data in response.iter_content(chunk_size=4096):
-#                 f.write(data)
-
-#         return True
-    
-#     except Exception as ex:
-#         print(ex)
-#         return False
-
 def valid_url_for_chan(msg: str):
     msg_list = msg.split(' ')
     
@@ -60,8 +35,11 @@ def valid_url_for_chan(msg: str):
     return url
 
 
-def parse_params(url: str):
-
+def parse_params(url: str) -> (str, str):
+    
+    pattern1 = ' все серии'
+    pattern2 = ' все серии и сезоны'
+    
     session = requests.session()
     session.headers.update(headers)
     req = session.get(url)
@@ -76,13 +54,15 @@ def parse_params(url: str):
         tg_me = tg_me.replace('-','_')
         
         name = soup.h1.text[9:]
-    
+
+        name = name.replace(pattern2, '')
+        name = name.replace(pattern1, '')
 
         # print(name, '\n', tg_me, '\n', img_link)
         response = session.get(img_link)
         with open (r'core/client/temp/image.jpg', 'wb') as ph:
             ph.write(response.content)
-        
+        print(name,tg_me)
         return name, tg_me
 
     except Exception as ex:
