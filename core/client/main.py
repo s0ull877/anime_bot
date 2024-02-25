@@ -8,8 +8,8 @@ from telethon.sync import events
 from telethon.tl.functions.channels import InviteToChannelRequest,EditAdminRequest
 from telethon.tl.types import PeerUser, PeerChat, PeerChannel,ChatAdminRights
 
-from core.client.parser import parse_params,valid_url_for_chan
-from core.client.create_chan import create_channel_public
+from core.client.functions.parser import parse_params,valid_url_for_chan
+from core.client.commands.create_chan import create_channel_public
 import logging
 
 logging.basicConfig(format='[%(levelname) 5s/%(asctime)s] %(name)s: %(message)s',
@@ -31,6 +31,7 @@ with client:
             name, tg_me = parse_params(resp)
             suc_chan = await create_channel_public(name,config.desc_channel,tg_me,client)
             _ = await msg.reply(suc_chan)
+            
 
 
     client.run_until_disconnected()

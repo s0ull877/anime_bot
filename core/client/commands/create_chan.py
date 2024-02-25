@@ -4,7 +4,7 @@ from telethon.tl.functions.channels import CreateChannelRequest, CheckUsernameRe
 from telethon.tl.types import InputChannel, InputPeerChannel, ChatAdminRights
 
 import config
-from core.client.database import database
+from database import database
 
 
 async def invite_client_bot(channel_id: int, client: TelegramClient):
@@ -51,6 +51,7 @@ async def create_channel_public(channelName: str,channelDesc: str,desiredPublicU
         
         await invite_client_bot(newChannelID,client)
         database.insert_chan_info(str(newChannelID),channelName, desiredPublicUsername)
+        client.send_message(config.client_bot_id, message=f'/fill {newChannelID}')
         
         return f'Канал создан успешно. https://t.me/{desiredPublicUsername}'
 
