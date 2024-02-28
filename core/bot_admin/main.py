@@ -14,7 +14,7 @@ from core.bot_admin.commands.client_command import fill_channel
 logging.basicConfig(format='[%(levelname) 5s/%(asctime)s] %(name)s: %(message)s',
                     level=logging.WARNING)
 
-bot = Bot(config.client_bot_token)
+bot = Bot(config.client_bot_token,parse_mode='MarkdownV2')
 dp = Dispatcher(bot)
 
 
