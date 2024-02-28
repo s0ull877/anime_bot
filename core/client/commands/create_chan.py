@@ -53,7 +53,7 @@ async def create_channel_public(channelName: str,channelDesc: str,desiredPublicU
         
         await invite_client_bot(newChannelID,client)
         database.insert_chan_info(str(newChannelID),channelName, desiredPublicUsername)
-        await client.send_message(config.client_bot_id, message=f'/fill {newChannelID}')
+        await client.send_message(config.client_bot_id, message=f'/fill {newChannelID} https://jut.su/{desiredPublicUsername}/')
         
         return f'Канал создан успешно. https://t.me/{desiredPublicUsername}'
 

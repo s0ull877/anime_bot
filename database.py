@@ -26,7 +26,6 @@ class DataBase:
             
                     
     def test(self):
-    # cur = connection.cursor()
         with self.con.cursor() as cur:
             cur.execute(
                 "SELECT version();"
@@ -43,16 +42,23 @@ class DataBase:
                 )
         return
 
-    # def create_tables(self):# channel_id, channel_name, channel_url
-    #     with self.con.cursor() as cur:
-    #         cur.execute(
-    #             """ CREATE TABLE channels(
-    #                 channel_id TEXT PRIMARY KEY,
-    #                 channel_name varchar(65) NOT NULL,
-    #                 channel_link varchar(45) NOT NULL);
-    #             """
-    #             )
-    #     return
+    def create_tables(self, table_name: str):
+        with self.con.cursor() as cur:
+            cur.execute(
+                """ CREATE TABLE %s(
+                    msg_id int PRIMARY KEY,
+                    seria varchar(30) NOT NULL,
+                    title varchar(60) NOT NULL);
+                """,(table_name)
+                )
+        return
+
+    def insert_seria(self,table_name:str, msg_id: int, seria: str, title: str):
+        with self.con.cursor() as cur:
+            cur.execute(
+                "INSERT INTO %s (msg_id, seria, title) VALUES (%s , %s, %s)",(table_name, msg_id, seria, title)
+                )
+        return      
 
 database = DataBase()
 

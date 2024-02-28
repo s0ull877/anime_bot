@@ -62,7 +62,6 @@ def parse_params(url: str) -> (str, str):
         response = session.get(img_link)
         with open (r'core/client/temp/image.jpg', 'wb') as ph:
             ph.write(response.content)
-        print(name,tg_me)
         return name, tg_me
 
     except Exception as ex:
