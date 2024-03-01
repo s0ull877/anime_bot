@@ -4,10 +4,12 @@ sys.path.insert(0,os.path.join(os.getcwd()))
 
 import bs4
 import requests
+from aiogram.types import InputFile
 from fake_useragent import UserAgent
 from aiogram import Bot
 from database import database
-
+import config
+import time
 
 ua = UserAgent()
 headers = {
@@ -47,7 +49,7 @@ def parse_video(url: str):
 def get_params(url: str) -> dict:
     param_dict = {}
     url_list = url.split('/')
-    seria_num = ' '.join(url_list[4:]).replace('.html','').replace('-', ' ')
+    seria_num = ' '.join(url_list[5:]).replace('.html','').replace('-', ' ')
     seria_num = seria_num.replace('season', 'Сезон').replace('episode','Серия')
     param_dict['seria_num'] = seria_num
 
@@ -69,7 +71,7 @@ def get_params(url: str) -> dict:
 
 
     except Exception as ex:
-        print(f'Error core\\bot_admin\\funcs\parse_video.py in get_params:\n{ex}')
+        print(f'Error core/bot_admin/funcs/parse_video.py in get_params:\n{ex}')
         return False
 
 
@@ -94,41 +96,43 @@ def get_series_urls(url:str) -> list:
         return urls_list
 
     except Exception as ex:
-        print(f'Error core\\bot_admin\\funcs\parse_video.py in get_series_urls:\n{ex}')
+        print(ex)
         return False
     
     
 
-async def fill_channel(url:str, chan_id: str, bot: Bot) -> str:
+async def fill_channel(url:str, chan_id: str,  chan_name: str, bot: Bot) -> str:
     urls = get_series_urls(url)
 
     if not urls:
-        return False
+        return fr'Error core/bot_admin/funcs/parse_video.py in get_series_urls'
 
     try:
         for url in urls:
             params_dict = get_params('https://jut.su/' + url)
+            if params_dict:
+                seria_num = params_dict['seria_num']
+                seria_title = params_dict['seria_title']
+                text = f"<b>{seria_num}</b>\n{seria_title}"
+                photo = InputFile('core/bot_admin/temp/poster.jpg')
 
-            seria_num = params_dict['seria_num']
-            seria_title = params_dict['seria_title']
-            text = f"*{seria_num}*\n{seria_title}"
-            photo = open('core/bot_admin/temp/poster.jpg')
-            
-            message = await bot.send_photo(chat_id=int(chan_id), photo=photo, caption=text, parse_mode="MARKDOWN")
-
-            database.insert_seria(table_name=chan_id,msg_id=message.id,seria=seria_num,title=seria_title)
+                message = await bot.send_photo(chat_id=int(chan_id), photo=photo, caption=text,parse_mode='HTML')
+                database.insert_seria(table_name=chan_name,msg_id=message.message_id,seria=seria_num,title=seria_title)
+                time.sleep(1)
+            else:
+                _ = await bot.send_message(config.CLIENT_ID, text=f'Bad params with link https://jut.su/{url}')
 
         return "Successfull fill channel!"
 
     except Exception as ex:
-        print(f'Error core\\bot_admin\\funcs\parse_video.py in fill_channel:\n{ex}')
-        return False
+        text = f'Error core/bot_admin/funcs/parse_video.py in fill_channel:\n{ex}'
+        return text
 
 
 
 
 
 if __name__ == '__main__':
-    # get_series_urls('https://jut.su/life-no-game/')
-    get_params('https://jut.su/fullmeetal-alchemist/season-1/episode-1.html')
+    print(get_series_urls('https://jut.su/life-no-game/'))
+    # get_params('https://jut.su/fullmeetal-alchemist/season-1/episode-1.html')
     # get_params('https://jut.su/life-no-game/episode-1.html')

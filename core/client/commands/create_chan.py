@@ -2,9 +2,9 @@ from telethon import TelegramClient
 from telethon.tl.functions import channels
 from telethon.tl.functions.channels import CreateChannelRequest, CheckUsernameRequest, UpdateUsernameRequest, EditAdminRequest
 from telethon.tl.types import InputChannel, InputPeerChannel, ChatAdminRights
+import pprint
 
 import config
-from database import database
 
 
 async def invite_client_bot(channel_id: int, client: TelegramClient):
@@ -36,7 +36,7 @@ async def invite_client_bot(channel_id: int, client: TelegramClient):
         # return
 
 
-async def create_channel_public(channelName: str,channelDesc: str,desiredPublicUsername: str, client: TelegramClient):
+async def create_channel_public(channelName: str,channelDesc: str,desiredPublicUsername: str, client: TelegramClient,url: str):
     
     NewChannelName = channelName + ' все серии'
     
@@ -52,8 +52,7 @@ async def create_channel_public(channelName: str,channelDesc: str,desiredPublicU
         channelPhoto = await client(channels.EditPhotoRequest(NewChannelName,photo=await client.upload_file(r'core/client/temp/image.jpg')))
         
         await invite_client_bot(newChannelID,client)
-        database.insert_chan_info(str(newChannelID),channelName, desiredPublicUsername)
-        await client.send_message(config.client_bot_id, message=f'/fill {newChannelID} https://jut.su/{desiredPublicUsername}/')
+        await client.send_message(config.client_bot_id, message=f'/fill {desiredPublicUsername} {url}')
         
         return f'Канал создан успешно. https://t.me/{desiredPublicUsername}'
 
