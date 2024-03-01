@@ -8,5 +8,26 @@ headers = {
     "User-Agent": ua.random
     }
 
+def parse_video(url: str) -> bool:
 
+    session = requests.session()
+    session.headers.update(headers)
+    req = session.get(url)
+    
+    try:
+        soup = bs4.BeautifulSoup(req.text,'lxml')
+
+        video = soup.source['src']
+
+        with open(r'core/client/temp/video.mp4', 'wb') as f:
+            response = session.get(video, stream=True)
+            
+            for data in response.iter_content(chunk_size=4096):
+                f.write(data)
+
+        return True
+    
+    except Exception as ex:
+        print(ex)
+        return False
 

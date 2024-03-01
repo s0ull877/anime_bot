@@ -8,5 +8,5 @@ class IsClient(BoundFilter):
     def __init__(self, client):
         self.admin = client
 
-    async def check(self, msg: Message):
+    async def check(self, msg: Message) -> bool:
         return msg.chat.id == config.CLIENT_ID

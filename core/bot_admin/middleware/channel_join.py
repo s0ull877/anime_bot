@@ -12,7 +12,6 @@ class BotJoinMiddleware(BaseMiddleware):
                 chan_id = update.my_chat_member.chat.id
                 chan_name = update.my_chat_member.chat.title.replace(' все серии', '')
                 chan_link = update.my_chat_member.chat.username
-                # print(chan_id,'\n',chan_name, '\n', chan_link)
                 database.insert_chan_info(chan_id,chan_name,chan_link)
 
             return            

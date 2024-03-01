@@ -21,7 +21,7 @@ client = TelegramClient('anon', config.api_id, config.api_hash, system_version="
 with client:
 
     @client.on(events.NewMessage(chats=config.ADMIN_ID,pattern=r"/create_chan"))
-    async def cmd_create_chan(msg):
+    async def cmd_create_chan(msg) -> None:
 
         resp = valid_url_for_chan(msg.text)
 

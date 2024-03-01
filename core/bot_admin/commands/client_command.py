@@ -7,7 +7,7 @@ from aiogram.types import Message
 
 import config
 from database import database
-from core.bot_admin.funcs.parse_video import fill_channel
+from core.bot_admin.funcs.fill_channel import fill_channel
 
 bot = Bot(config.client_bot_token)
 
@@ -18,5 +18,5 @@ async def fill_channel_cmd(message: Message):
     database.create_tables(channel_link)
 
     text = await fill_channel(url=url,chan_id=chan_id, chan_name=channel_link, bot=bot)
-    _ = await message.reply(text=text)
+    await message.reply(text=text)
 

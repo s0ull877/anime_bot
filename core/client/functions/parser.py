@@ -9,7 +9,7 @@ headers = {
     "User-Agent": ua.random
     }
 
-def valid_url_for_chan(msg: str):
+def valid_url_for_chan(msg: str) -> str: 
     msg_list = msg.split(' ')
     
     if len(msg_list) != 2:
@@ -58,7 +58,6 @@ def parse_params(url: str) -> (str, str):
         name = name.replace(pattern2, '')
         name = name.replace(pattern1, '')
 
-        # print(name, '\n', tg_me, '\n', img_link)
         response = session.get(img_link)
         with open (r'core/client/temp/image.jpg', 'wb') as ph:
             ph.write(response.content)
