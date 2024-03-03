@@ -36,9 +36,10 @@ class DataBase:
         
 
     def insert_chan_info(self,chan_id,chan_name,chan_link):
+        search = chan_name.lower()
         with self.con.cursor() as cur:
             cur.execute(
-                "INSERT INTO channels (channel_id, channel_name, channel_link) VALUES (%s , %s, %s)",(chan_id,chan_name,chan_link)
+                "INSERT INTO channels (channel_id, channel_name, channel_link, search) VALUES (%s , %s, %s, %s)",(chan_id,chan_name,chan_link, search)
                 )
         return
 
