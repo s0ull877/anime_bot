@@ -14,6 +14,10 @@ from core.bot_admin.commands.user_commands import start_cmd
 
 from core.bot_admin.middleware.channel_join import BotJoinMiddleware
 
+from core.bot_admin.funcs.search import search_anime
+
+from core.bot_admin.callbacks.show_pages import show_next_page,show_previous_page,temp_handler
+
 logging.basicConfig(format='[%(levelname) 5s/%(asctime)s] %(name)s: %(message)s',
                     level=logging.WARNING)
 
@@ -23,9 +27,18 @@ dp = Dispatcher(bot)
 
 dp.register_message_handler(start_cmd, commands=['start', 'help'])
 dp.register_message_handler(fill_channel_cmd, IsClient(True), commands=['fill'])
+dp.register_message_handler(search_anime)
+
+dp.register_callback_query_handler(show_next_page,lambda callback: callback.data.startswith('page_next'))
+dp.register_callback_query_handler(show_previous_page,lambda callback: callback.data.startswith('page_previous'))
+dp.register_callback_query_handler(temp_handler,lambda callback: callback.data.startswith('temp'))
 
 
+@dp.callback_query_handler()
+async def test(callback: types.CallbackQuery):
+    print(callback)
 
 if __name__ == '__main__':
     dp.middleware.setup(BotJoinMiddleware())
+
     executor.start_polling(dp, skip_updates=True)

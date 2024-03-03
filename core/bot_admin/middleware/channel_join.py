@@ -17,4 +17,3 @@ class BotJoinMiddleware(BaseMiddleware):
             return            
         except Exception:
             pass
-

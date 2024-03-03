@@ -105,8 +105,15 @@ class DataBase:
             print(ex)
 
 
+    def search_anime_request(self, pattern:str) -> list:
+        pattern = pattern.lower()
+        with self.con.cursor() as cur:
+            cur.execute(
+                "SELECT channel_name FROM channels WHERE search LIKE '%{}%'".format(pattern)
+                )           
 
-
+            response = cur.fetchall() #[(channel_name1,),(channel_name2,),(channel_name3,)]
+            return response
 
 
 
@@ -118,5 +125,5 @@ database = DataBase()
 
 if __name__ == '__main__':
     db = DataBase()
-    # db.create_table()
-    # db.add_or_update_user('1215105453', '😃💁;', 'adwada')
+    for i in range(0,12):
+        db.insert_chan_info(chan_id='1234567',chan_name=f'Очень приятно, бог{i}', chan_link=f'{i}')
