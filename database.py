@@ -10,6 +10,7 @@ class DataBase:
 
     con: None
 
+#! ****************************************COMMANDS FOR FILL CHANNELS********************************
     def __init__(self):
         try: 
             self.con = psycopg2.connect(
@@ -75,16 +76,40 @@ class DataBase:
 
                     
 
-    def create_table(self):
-        with self.con.cursor() as cur:
-            cur.execute(
-                """ CREATE TABLE channels(
-                    channel_id varchar(20) NOT NULL,
-                    channel_name varchar(50) NOT NULL,
-                    channel_link varchar(60)  PRIMARY KEY);
-                """
-                )
-        return
+    # def create_table(self):
+    #     with self.con.cursor() as cur:
+    #         cur.execute(
+    #             """ CREATE TABLE users(
+    #                 user_id varchar(20) PRIMARY KEY,
+    #                 username TEXT,
+    #                 nickname varchar(33) NOT NULL );
+    #             """
+    #             )
+    #     return
+
+# ! *****************************************COMMANDS FOR USER INTERFACE***********************************
+
+    def add_or_update_user(self,user_id,username,nickname):
+        try:
+            with self.con.cursor() as cur:
+                cur.execute(
+                    "INSERT INTO users (user_id, username, nickname) VALUES ('{}' , '{}', '{}')".format(user_id, username, nickname)
+                    )
+        except psycopg2.errors.lookup('23505'):
+            with self.con.cursor() as cur:
+                cur.execute(
+                    "UPDATE users SET username='{}', nickname='{}' WHERE user_id='{}'".format(username, nickname, user_id)
+                    )
+        except Exception as ex:
+            print(ex)
+
+
+
+
+
+
+
+
 
 
 
@@ -93,4 +118,4 @@ database = DataBase()
 if __name__ == '__main__':
     db = DataBase()
     # db.create_table()
-    # print(db.get_answer('S0_anime_no_game_no_life'))
+    # db.add_or_update_user('1215105453', '😃💁;', 'adwada')

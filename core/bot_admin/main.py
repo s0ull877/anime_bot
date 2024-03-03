@@ -10,6 +10,8 @@ import config
 from core.bot_admin.filters.is_client import IsClient
 
 from core.bot_admin.commands.client_command import fill_channel_cmd
+from core.bot_admin.commands.user_commands import start_cmd
+
 from core.bot_admin.middleware.channel_join import BotJoinMiddleware
 
 logging.basicConfig(format='[%(levelname) 5s/%(asctime)s] %(name)s: %(message)s',
@@ -19,23 +21,10 @@ bot = Bot(config.client_bot_token)
 dp = Dispatcher(bot)
 
 
-
-
-@dp.message_handler(IsClient(True) , commands=['start', 'help'])
-async def send_welcome(message: types.Message):
-
-    await message.reply("Hi!\nI'm s0 Bot!\nPowered by aiogram.")
-
-# @dp.channel_post_handler()
-# async def test(message: types.Message):
-#     msg = await message.reply(f'{message}')
-#     await bot.send_message(msg.chat.id, 'success')
-
-
-
-
-
+dp.register_message_handler(start_cmd, commands=['start', 'help'])
 dp.register_message_handler(fill_channel_cmd, IsClient(True), commands=['fill'])
+
+
 
 if __name__ == '__main__':
     dp.middleware.setup(BotJoinMiddleware())
