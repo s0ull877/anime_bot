@@ -18,6 +18,8 @@ from core.bot_admin.funcs.search import search_anime
 
 from core.bot_admin.callbacks.show_pages import show_next_page,show_previous_page,temp_handler
 
+from core.bot_admin.funcs.parser import get_decription
+
 logging.basicConfig(format='[%(levelname) 5s/%(asctime)s] %(name)s: %(message)s',
                     level=logging.WARNING)
 
@@ -27,7 +29,9 @@ dp = Dispatcher(bot)
 
 dp.register_message_handler(start_cmd, commands=['start', 'help'])
 dp.register_message_handler(fill_channel_cmd, IsClient(True), commands=['fill'])
+dp.register_message_handler(get_decription,commands=['test'])
 dp.register_message_handler(search_anime)
+
 
 dp.register_callback_query_handler(show_next_page,lambda callback: callback.data.startswith('page_next'))
 dp.register_callback_query_handler(show_previous_page,lambda callback: callback.data.startswith('page_previous'))

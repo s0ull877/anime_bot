@@ -32,25 +32,18 @@ async def invite_client_bot(channel_id: int, client: TelegramClient) -> None:
         ))
 
 
-async def create_channel_public(channelName: str,channelDesc: str,desiredPublicUsername: str, client: TelegramClient,url: str) -> str:
+async def create_channel(channelName: str,channelDesc: str,desiredPublicUsername: str, client: TelegramClient,url: str) -> str:
     
     NewChannelName = channelName + ' все серии'
     
     createdPrivateChannel = await client(channels.CreateChannelRequest(NewChannelName,channelDesc,megagroup=False)) #сначала создание приватного канала для функции ниже
 
     newChannelID = createdPrivateChannel.__dict__["chats"][0].__dict__["id"]
-    newChannelAccessHash = createdPrivateChannel.__dict__["chats"][0].__dict__["access_hash"]
-
-    checkUsernameResult = await client(channels.CheckUsernameRequest(InputPeerChannel(channel_id=newChannelID, access_hash=newChannelAccessHash), desiredPublicUsername))
-
-    if(checkUsernameResult==True):
-        publicChannel = await client(channels.UpdateUsernameRequest(InputPeerChannel(channel_id=newChannelID, access_hash=newChannelAccessHash), desiredPublicUsername))
-        channelPhoto = await client(channels.EditPhotoRequest(NewChannelName,photo=await client.upload_file(r'core/client/temp/image.jpg')))
-        
-        await invite_client_bot(newChannelID,client)
-        await client.send_message(config.client_bot_id, message=f'/fill {desiredPublicUsername} {url}')
-        
-        return f'Канал создан - https://t.me/{desiredPublicUsername}\nНачинаю заполнение...'
+    
+    await invite_client_bot(newChannelID,client)
+    await client.send_message(config.client_bot_id, message=f'/fill {desiredPublicUsername} {url}')
+    
+    return f'Канал создан. \nНачинаю заполнение...'
 
 
 

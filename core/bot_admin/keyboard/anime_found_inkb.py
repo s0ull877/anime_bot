@@ -17,7 +17,7 @@ def anime_found(data: list,page=0) -> InlineKeyboardMarkup:
         return ikb
     
     if page == 0:
-        ikb.add(InlineKeyboardButton(text='❌',callback_data=f'temp'),
+        ikb.add(InlineKeyboardButton(text='Страница',callback_data=f'temp'),
         InlineKeyboardButton(text=f'{page+1}/{pages}',callback_data=f'temp'),
         InlineKeyboardButton(text='▶️',callback_data=f'page_next/{page+1}'))
         return ikb

@@ -9,7 +9,7 @@ from telethon.tl.functions.channels import InviteToChannelRequest,EditAdminReque
 from telethon.tl.types import PeerUser, PeerChat, PeerChannel,ChatAdminRights
 
 from core.client.functions.parser import parse_params,valid_url_for_chan
-from core.client.commands.create_chan import create_channel_public
+from core.client.commands.create_chan import create_channel
 from database import database
 import logging
 
@@ -34,8 +34,10 @@ with client:
             if answer:
                 await msg.reply('Такой канал уже создан')
             else:
-                suc_chan = await create_channel_public(name,config.desc_channel,tg_me,client,resp)
+                database.insert_chan_info(url=resp,chan_name=name,chan_link=tg_me)
+                suc_chan = await create_channel(name,config.desc_channel,tg_me,client,resp)
                 _ = await msg.reply(suc_chan)
+
             
 
 

@@ -35,12 +35,18 @@ class DataBase:
         return answer
         
 
-    def insert_chan_info(self,chan_id,chan_name,chan_link):
+    def insert_chan_info(self,url,chan_name,chan_link):
         search = chan_name.lower()
         with self.con.cursor() as cur:
             cur.execute(
-                "INSERT INTO channels (channel_id, channel_name, channel_link, search) VALUES (%s , %s, %s, %s)",(chan_id,chan_name,chan_link, search)
+                "INSERT INTO channels (channel_name, channel_link, search,url) VALUES (%s , %s, %s, %s)",(chan_name,chan_link, search,url)
                 )
+        return
+
+    def set_chan_id(self,chan_id:str, channel_name:str):
+        with self.con.cursor() as cur:
+            cur.execute(
+                "UPDATE channels SET channel_id='{}' WHERE channel_name='{}'".format(chan_id, channel_name)                )
         return
 
 
@@ -54,6 +60,13 @@ class DataBase:
         
         return int(channel_id)   
 
+
+    def set_url(self,  url: str, channel_link: str):
+        
+        with self.con.cursor() as cur:
+            cur.execute(
+                "UPDATE channels SET url='{}' WHERE channel_link='{}'".format(url,channel_link)
+                )
 
     def create_tables(self, table_name: str):
         with self.con.cursor() as cur:

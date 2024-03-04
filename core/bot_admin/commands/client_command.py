@@ -15,8 +15,12 @@ async def fill_channel_cmd(message: Message):
     channel_link = message.text.split(' ')[1]
     chan_id = database.get_chan_id(channel_link)
     url = message.text.split(' ')[-1]
+
+    database.set_url(url=url,channel_link=channel_link)
     database.create_tables(channel_link)
 
     text = await fill_channel(url=url,chan_id=chan_id, chan_name=channel_link, bot=bot)
     await message.reply(text=text)
+
+    
 
