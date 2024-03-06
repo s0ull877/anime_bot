@@ -33,22 +33,6 @@ class DataBase:
             answer = cur.fetchone()
        
         return answer
-        
-
-    def insert_chan_info(self,url,chan_name,chan_link):
-        search = chan_name.lower()
-        with self.con.cursor() as cur:
-            cur.execute(
-                "INSERT INTO channels (channel_name, channel_link, search,url) VALUES (%s , %s, %s, %s)",(chan_name,chan_link, search,url)
-                )
-        return
-
-    def set_chan_id(self,chan_id:str, channel_name:str):
-        with self.con.cursor() as cur:
-            cur.execute(
-                "UPDATE channels SET channel_id='{}' WHERE channel_name='{}'".format(chan_id, channel_name)                )
-        return
-
 
 
     def get_chan_id(self,channel_link:str) -> int:
@@ -59,6 +43,76 @@ class DataBase:
             channel_id = cur.fetchone()[0]
         
         return int(channel_id)   
+        
+
+    def get_anime_name(self, channel_link) -> str:
+        with self.con.cursor() as cur:
+            cur.execute(
+                "SELECT channel_name FROM channels WHERE channel_link='{}'".format(channel_link)
+                )
+            name = cur.fetchone()[0]    
+        return name
+
+
+    def get_counts(self,table_name:str) -> [str, str, str]:
+        with self.con.cursor() as cur:
+            cur.execute(
+                "SELECT seria FROM {}".format(table_name)
+                )
+            data = cur.fetchall()
+            
+        seria_count = len(data)
+        last_seria = data[-1][0]
+        last_count_str = last_seria.replace('Сезон ', '').replace('Серия ','')
+        last_count_list = last_count_str.split(' ')
+     
+        if len(last_count_list) == 1:
+            last_season= '1'
+            last_seria = last_count_list[0]
+            return [seria_count, last_seria, last_season]
+
+        return [seria_count, last_count_list[1], last_count_list[0]]
+
+
+    def get_url(self,channel_link:str) -> str:
+        with self.con.cursor() as cur:
+            cur.execute(
+                "SELECT url FROM channels WHERE channel_link='{}'".format(channel_link)
+                )
+            url = cur.fetchone()[0]    
+        return url
+
+
+    def insert_seria(self,table_name:str, msg_id: int, seria: str, title: str):
+        with self.con.cursor() as cur:
+            cur.execute(
+                "INSERT INTO {} (msg_id, seria, title) VALUES ({} , '{}', '{}')".format(table_name, msg_id, seria, title)
+                )
+        return      
+
+
+    def insert_chan_info(self,url,chan_name,chan_link):
+        search = chan_name.lower()
+        with self.con.cursor() as cur:
+            cur.execute(
+                "INSERT INTO channels (channel_name, channel_link, search,url) VALUES (%s , %s, %s, %s)",(chan_name,chan_link, search,url)
+                )
+        return
+
+    
+    def insert_data_info(self,channel_link:str, msg_id: int, description: str):
+        with self.con.cursor() as cur:
+            cur.execute(
+                "INSERT INTO anime_info (channel_link, msg_id, description) VALUES ('{}', '{}', '{}')".format(channel_link,msg_id, description)
+                )
+        return        
+
+
+    def set_chan_id(self,chan_id:str, channel_name:str):
+        with self.con.cursor() as cur:
+            cur.execute(
+                "UPDATE channels SET channel_id='{}' WHERE channel_name='{}'".format(chan_id, channel_name)                )
+        return
 
 
     def set_url(self,  url: str, channel_link: str):
@@ -67,6 +121,7 @@ class DataBase:
             cur.execute(
                 "UPDATE channels SET url='{}' WHERE channel_link='{}'".format(url,channel_link)
                 )
+
 
     def create_tables(self, table_name: str):
         with self.con.cursor() as cur:
@@ -81,14 +136,6 @@ class DataBase:
 
 
 
-    def insert_seria(self,table_name:str, msg_id: int, seria: str, title: str):
-        with self.con.cursor() as cur:
-            cur.execute(
-                "INSERT INTO {} (msg_id, seria, title) VALUES ({} , '{}', '{}')".format(table_name, msg_id, seria, title)
-                )
-        return      
-
-                    
 
     # def create_table(self):
     #     with self.con.cursor() as cur:
@@ -138,5 +185,4 @@ database = DataBase()
 
 if __name__ == '__main__':
     db = DataBase()
-    for i in range(0,12):
-        db.insert_chan_info(chan_id='1234567',chan_name=f'Очень приятно, бог{i}', chan_link=f'{i}')
+    print(db.get_counts('s0_anime_another'))

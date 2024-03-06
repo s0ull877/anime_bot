@@ -92,7 +92,7 @@ async def fill_channel(url:str, chan_id: str,  chan_name: str, bot: Bot) -> str:
                 database.insert_seria(table_name=chan_name,msg_id=message.message_id,seria=seria_num,title=seria_title)
                 time.sleep(1)
             else:
-                _ = await bot.send_message(config.CLIENT_ID, text=f'Bad params with link https://jut.su/{url}')
+                return f'Bad params with link https://jut.su/{url}'
 
         return "Successfull fill channel!"
 

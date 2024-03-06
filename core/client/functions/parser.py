@@ -50,7 +50,7 @@ def parse_params(url: str) -> (str, str):
         ptr = re.search("http.*[']",img_div)
 
         img_link = img_div[ptr.start():ptr.end()-1]
-        tg_me = 'S0_' + img_link.split('/')[-1][:-4]
+        tg_me = 's0_' + img_link.split('/')[-1][:-4]
         tg_me = tg_me.replace('-','_')
         
         name = soup.h1.text[9:]

@@ -12,7 +12,6 @@ class BotJoinMiddleware(BaseMiddleware):
                 
                 chan_id = update.my_chat_member.chat.id
                 chan_name = update.my_chat_member.chat.title.replace(' все серии', '')
-                print(chan_name, chan_id)
                 
                 database.set_chan_id(chan_id=chan_id,channel_name=chan_name)
 
