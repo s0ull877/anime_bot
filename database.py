@@ -176,7 +176,38 @@ class DataBase:
             return response
 
 
+    def get_link(self,channel_name:str) -> str:
+        try:
+            with self.con.cursor() as cur:
+                cur.execute(
+                    "SELECT channel_link FROM channels WHERE channel_name='{}'".format(channel_name)
+                    )
+                link = cur.fetchone()[0]    
+                return link
+        except Exception:
+            return False
 
+
+    def get_infodata(self, link:str) -> [str,str,str]:
+        try: 
+            with self.con.cursor() as cur:
+                cur.execute(
+                    "SELECT msg_id, description FROM anime_info WHERE channel_link='{}'".format(link)
+                    )
+                data = cur.fetchone()
+                msg_id = data[0]
+                desc = data[1]
+
+            return link, msg_id, desc
+        
+        except TypeError:
+            msg_id = '538' #message, in which we talk about lack of information
+            desc = """Информация по данному аниме еще не указана☹️
+Постараемся заполнить ее в ближайшее время❤️
+
+P.S. Однако вы все же можете приступить к просмотру
+"""
+            return link, msg_id, desc
 
 
 
