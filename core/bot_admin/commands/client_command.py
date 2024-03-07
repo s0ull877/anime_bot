@@ -11,7 +11,7 @@ from core.bot_admin.funcs.fill_channel import fill_channel
 
 from core.bot_admin.funcs.create_info import start_create_info
 
-bot = Bot(config.client_bot_token)
+bot = config.bot
 
 async def fill_channel_cmd(message: Message):
     channel_link = message.text.split(' ')[1]

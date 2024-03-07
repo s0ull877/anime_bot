@@ -6,10 +6,11 @@ from core.bot_admin.keyboard.under_anime_info import under_anime_info,under_anim
 from database import database
 import config
 
-bot = Bot(config.client_bot_token)
+bot = config.bot
 
 
 async def on_anime_button_callback(callback: CallbackQuery) -> None:
+    await callback.answer('')
     chan_link = database.get_link(callback.data)
     chan_link, msg_id, desc = database.get_infodata(chan_link)
     await bot.copy_message(chat_id=callback.message.chat.id, from_chat_id=config.tech_group_id, \

@@ -41,7 +41,6 @@ class DataBase:
                 "SELECT channel_id FROM channels WHERE channel_link = '{}'".format(channel_link)
                 )
             channel_id = cur.fetchone()[0]
-        
         return int(channel_id)   
         
 
@@ -129,7 +128,8 @@ class DataBase:
                 """ CREATE TABLE {}(
                     msg_id int PRIMARY KEY,
                     seria varchar(30) NOT NULL,
-                    title varchar(60) NOT NULL);
+                    title varchar(60) NOT NULL,
+                    rowid int DEFAULT 0);
                 """.format(table_name)
                 )
         return
@@ -208,6 +208,22 @@ class DataBase:
 P.S. Однако вы все же можете приступить к просмотру
 """
             return link, msg_id, desc
+
+
+    def get_seria_data(self, table_name: str, seria_num: int) -> [int, str, str]:
+        try:
+            with self.con.cursor() as cur:
+                cur.execute(
+                    "SELECT msg_id, seria, title FROM {} WHERE rowid={}".format(table_name, seria_num)
+                    )
+                data = cur.fetchone()
+                msg_id = data[0]
+                seria = data[1]
+                title = data[2]
+
+            return msg_id, seria, title
+        except TypeError:
+            return False, False, False
 
 
 

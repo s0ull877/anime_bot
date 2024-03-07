@@ -5,7 +5,7 @@ from core.bot_admin.keyboard.create_info_ikb import start_create_ikb
 from database import database
 import config
 
-bot = Bot(config.client_bot_token)
+bot = config.bot
 
 async def start_create_info(text: str,channel_link:str):
     

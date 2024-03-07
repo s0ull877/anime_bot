@@ -1,5 +1,3 @@
-import os
-
 from aiogram import Bot
 from aiogram.types import CallbackQuery, Message, InputFile
 from aiogram.dispatcher import FSMContext
@@ -10,10 +8,10 @@ from core.bot_admin.funcs.parser import get_desc
 from core.bot_admin.keyboard.create_info_ikb import start_create_ikb,end_create_ikb,temp_ikb
 from database import database
 
-bot = Bot(config.client_bot_token)
+bot = config.bot
 
 
-async def on_s0_anime_callback(callback: CallbackQuery):
+async def on_anime_callback(callback: CallbackQuery):
     await callback.message.delete()
 
     await callback.message.answer('Напиши год выпуска данного аниме и нажми на кнопку.',reply_markup=start_create_ikb('Готово',callback.data))

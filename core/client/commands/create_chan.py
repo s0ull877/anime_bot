@@ -4,6 +4,7 @@ from telethon.tl.functions.channels import CreateChannelRequest, CheckUsernameRe
 from telethon.tl.types import InputChannel, InputPeerChannel, ChatAdminRights
 import pprint
 
+import asyncio
 import config
 
 
@@ -41,6 +42,7 @@ async def create_channel(channelName: str,channelDesc: str,desiredPublicUsername
     newChannelID = createdPrivateChannel.__dict__["chats"][0].__dict__["id"]
     
     await invite_client_bot(newChannelID,client)
+    await asyncio.sleep(1)
     await client.send_message(config.client_bot_id, message=f'/fill {desiredPublicUsername} {url}')
     
     return f'Канал создан. \nНачинаю заполнение...'
