@@ -15,7 +15,7 @@ from core.bot_admin.filters.anime_in_db import InDB
 
 
 from core.bot_admin.commands.client_command import fill_channel_cmd
-from core.bot_admin.commands.user_commands import start_cmd
+from core.bot_admin.commands.user_commands import start_cmd,random_cmd
 
 from core.bot_admin.middleware.channel_join import BotJoinMiddleware
 
@@ -41,12 +41,14 @@ dp = Dispatcher(bot,storage=MemoryStorage())
 
 dp.register_message_handler(start_cmd, IsPrivate(True), commands=['start', 'help'])
 dp.register_message_handler(fill_channel_cmd, IsClient(True), commands=['fill'])
+dp.register_message_handler(random_cmd, commands=['random'])
 dp.register_message_handler(on_releas_message,state=Form.releas)
 dp.register_message_handler(on_studio_message,state=Form.studio)
 dp.register_message_handler(on_genres_message,state=Form.genres)
 dp.register_message_handler(on_photo_message,state=Form.photo,content_types=types.ContentType.PHOTO)
 dp.register_message_handler(start_create_info,IsClient(True))
 dp.register_message_handler(search_anime,IsPrivate(True))
+
 
 
 dp.register_callback_query_handler(show_next_page,lambda callback: callback.data.startswith('page_next'))

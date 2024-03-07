@@ -3,6 +3,7 @@ import sys
 sys.path.insert(0,os.path.join(os.getcwd()))
 # print(sys.path)
 
+import random
 import psycopg2
 import config
 
@@ -226,10 +227,17 @@ P.S. Однако вы все же можете приступить к прос
             return False, False, False
 
 
+    def get_random_link(self,*args) -> str:
+        with self.con.cursor() as cur:
+            cur.execute(
+                "SELECT channel_link FROM channels"
+                )
+            data = cur.fetchall()  
+            return random.choice(data)[0]
 
 
 database = DataBase()
 
 if __name__ == '__main__':
     db = DataBase()
-    print(db.get_counts('s0_anime_another'))
+    print(db.get_random_link())

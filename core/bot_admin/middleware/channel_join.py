@@ -7,7 +7,6 @@ from database import database
 class BotJoinMiddleware(BaseMiddleware):
 
     async def on_process_update(self, update: Update, data: dict):
-        print(update)
         try:
             if update.my_chat_member.new_chat_member.user.id == client_bot_id and update.my_chat_member.new_chat_member.status == 'administrator':
                 
