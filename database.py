@@ -83,10 +83,10 @@ class DataBase:
         return url
 
 
-    def insert_seria(self,table_name:str, msg_id: int, seria: str, title: str):
+    def insert_seria(self,table_name:str, msg_id: int, seria: str, title: str, rowid:int):
         with self.con.cursor() as cur:
             cur.execute(
-                "INSERT INTO {} (msg_id, seria, title) VALUES ({} , '{}', '{}')".format(table_name, msg_id, seria, title)
+                "INSERT INTO {} (msg_id, seria, title,rowid) VALUES ({} , '{}', '{}', {})".format(table_name, msg_id, seria, title,rowid)
                 )
         return      
 

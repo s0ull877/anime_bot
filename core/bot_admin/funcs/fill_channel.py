@@ -74,6 +74,7 @@ def get_series_urls(url:str) -> list:
     
 
 async def fill_channel(url:str, chan_id: str,  chan_name: str, bot: Bot) -> str:
+    row_id = 0
     urls = get_series_urls(url)
 
     if not urls:
@@ -83,13 +84,14 @@ async def fill_channel(url:str, chan_id: str,  chan_name: str, bot: Bot) -> str:
         for url in urls:
             params_dict = get_params('https://jut.su/' + url)
             if params_dict:
+                row_id +=1
                 seria_num = params_dict['seria_num']
                 seria_title = params_dict['seria_title']
                 text = f"<b>{seria_num}</b>\n{seria_title}"
                 photo = InputFile('core/bot_admin/temp/poster.jpg')
 
                 message = await bot.send_photo(chat_id=int(chan_id), photo=photo, caption=text,parse_mode='HTML')
-                database.insert_seria(table_name=chan_name,msg_id=message.message_id,seria=seria_num,title=seria_title)
+                database.insert_seria(table_name=chan_name,msg_id=message.message_id,seria=seria_num,title=seria_title,rowid=row_id)
                 time.sleep(1)
             else:
                 return f'Bad params with link https://jut.su/{url}'
