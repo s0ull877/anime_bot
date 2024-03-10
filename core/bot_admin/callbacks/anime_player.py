@@ -14,7 +14,6 @@ async def on_watch_anime_callback(callback: CallbackQuery) -> None:
 
     if msg_id:
 
-        await callback.message.delete()
         await bot.copy_message(chat_id=callback.message.chat.id, from_chat_id=chan_id, \
             message_id=msg_id, reply_markup=under_seria_ikb(anime=channel_link,rowid=1))
         await callback.answer('🍿Приятного просмотра🍿')
