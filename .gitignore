@@ -2,4 +2,4 @@ venv/
 config.py
 __pycache__/
 *.session
-bot_admin/
+
