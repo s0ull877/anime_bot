@@ -9,7 +9,8 @@ from telethon.tl.functions.channels import InviteToChannelRequest,EditAdminReque
 from telethon.tl.types import PeerUser, PeerChat, PeerChannel,ChatAdminRights
 
 from core.client.functions.parser import parse_params,valid_url_for_chan
-from core.client.commands.create_chan import create_channel_public
+from core.client.commands.create_chan import create_channel
+from database import database
 import logging
 
 logging.basicConfig(format='[%(levelname) 5s/%(asctime)s] %(name)s: %(message)s',
@@ -20,7 +21,7 @@ client = TelegramClient('anon', config.api_id, config.api_hash, system_version="
 with client:
 
     @client.on(events.NewMessage(chats=config.ADMIN_ID,pattern=r"/create_chan"))
-    async def cmd_create_chan(msg):
+    async def cmd_create_chan(msg) -> None:
 
         resp = valid_url_for_chan(msg.text)
 
@@ -29,8 +30,14 @@ with client:
         else:
 
             name, tg_me = parse_params(resp)
-            suc_chan = await create_channel_public(name,config.desc_channel,tg_me,client)
-            _ = await msg.reply(suc_chan)
+            answer = database.get_answer(tg_me)
+            if answer:
+                await msg.reply('Такой канал уже создан')
+            else:
+                database.insert_chan_info(url=resp,chan_name=name,chan_link=tg_me)
+                suc_chan = await create_channel(name,config.desc_channel,tg_me,client,resp)
+                _ = await msg.reply(suc_chan)
+
             
 
 

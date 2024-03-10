@@ -9,7 +9,7 @@ headers = {
     "User-Agent": ua.random
     }
 
-def valid_url_for_chan(msg: str):
+def valid_url_for_chan(msg: str) -> str: 
     msg_list = msg.split(' ')
     
     if len(msg_list) != 2:
@@ -50,7 +50,7 @@ def parse_params(url: str) -> (str, str):
         ptr = re.search("http.*[']",img_div)
 
         img_link = img_div[ptr.start():ptr.end()-1]
-        tg_me = 'S0_' + img_link.split('/')[-1][:-4]
+        tg_me = 's0_' + img_link.split('/')[-1][:-4]
         tg_me = tg_me.replace('-','_')
         
         name = soup.h1.text[9:]
@@ -58,7 +58,6 @@ def parse_params(url: str) -> (str, str):
         name = name.replace(pattern2, '')
         name = name.replace(pattern1, '')
 
-        # print(name, '\n', tg_me, '\n', img_link)
         response = session.get(img_link)
         with open (r'core/client/temp/image.jpg', 'wb') as ph:
             ph.write(response.content)

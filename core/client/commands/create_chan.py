@@ -2,16 +2,15 @@ from telethon import TelegramClient
 from telethon.tl.functions import channels
 from telethon.tl.functions.channels import CreateChannelRequest, CheckUsernameRequest, UpdateUsernameRequest, EditAdminRequest
 from telethon.tl.types import InputChannel, InputPeerChannel, ChatAdminRights
+import pprint
 
+import asyncio
 import config
-from database import database
 
 
-async def invite_client_bot(channel_id: int, client: TelegramClient):
+async def invite_client_bot(channel_id: int, client: TelegramClient) -> None:
         channel = await client.get_entity(channel_id)
         bot = await client.get_entity(config.client_bot_id)
-        # soulless = await client.get_entity(PeerUser(config.ADMIN_ID[0]))
-
 
         result = await client(EditAdminRequest(
             channel=channel,
@@ -33,29 +32,20 @@ async def invite_client_bot(channel_id: int, client: TelegramClient):
             rank="Poster"
         ))
 
-        # return
 
-
-async def create_channel_public(channelName: str,channelDesc: str,desiredPublicUsername: str, client: TelegramClient):
+async def create_channel(channelName: str,channelDesc: str,desiredPublicUsername: str, client: TelegramClient,url: str) -> str:
     
     NewChannelName = channelName + ' все серии'
     
     createdPrivateChannel = await client(channels.CreateChannelRequest(NewChannelName,channelDesc,megagroup=False)) #сначала создание приватного канала для функции ниже
 
     newChannelID = createdPrivateChannel.__dict__["chats"][0].__dict__["id"]
-    newChannelAccessHash = createdPrivateChannel.__dict__["chats"][0].__dict__["access_hash"]
-
-    checkUsernameResult = await client(channels.CheckUsernameRequest(InputPeerChannel(channel_id=newChannelID, access_hash=newChannelAccessHash), desiredPublicUsername))
-
-    if(checkUsernameResult==True):
-        publicChannel = await client(channels.UpdateUsernameRequest(InputPeerChannel(channel_id=newChannelID, access_hash=newChannelAccessHash), desiredPublicUsername))
-        channelPhoto = await client(channels.EditPhotoRequest(NewChannelName,photo=await client.upload_file(r'core/client/temp/image.jpg')))
-        
-        await invite_client_bot(newChannelID,client)
-        database.insert_chan_info(str(newChannelID),channelName, desiredPublicUsername)
-        await client.send_message(config.client_bot_id, message=f'/fill {newChannelID} https://jut.su/{desiredPublicUsername}/')
-        
-        return f'Канал создан успешно. https://t.me/{desiredPublicUsername}'
+    
+    await invite_client_bot(newChannelID,client)
+    await asyncio.sleep(1)
+    await client.send_message(config.client_bot_id, message=f'/fill {desiredPublicUsername} {url}')
+    
+    return f'Канал создан. \nНачинаю заполнение...'
 
 
 
