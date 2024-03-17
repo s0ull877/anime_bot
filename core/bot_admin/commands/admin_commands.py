@@ -9,21 +9,39 @@ from aiogram.utils import exceptions
 import config
 from database import database
 
+from core.bot_admin.keyboard.allert_ikb import allert_ikb
+
 bot = config.bot
 
 
 async def allert_cmd(msg:Message):
+    args = msg.text.split(' ')
+    print(args)
+        
     users_id = database.get_users('user_id')
     forward_message_id = msg.reply_to_message.message_id
     chat_id = msg.reply_to_message.chat.id
-
-    for user_id in users_id:
-        
-        try:
-        
-            await bot.copy_message(chat_id=user_id[0], from_chat_id=chat_id, message_id=forward_message_id)
-        
-        except exceptions.BotBlocked:
-            pass
     
+    if len(args) == 1:
+
+        for user_id in users_id:
+            
+            try:
+            
+                await bot.copy_message(chat_id=user_id[0], from_chat_id=chat_id, message_id=forward_message_id)
+            
+            except exceptions.BotBlocked:
+                pass
+    else:
+
+        for user_id in users_id:
+            
+            try:
+            
+                await bot.copy_message(chat_id=user_id[0], from_chat_id=chat_id, message_id=forward_message_id, \
+                    reply_markup=allert_ikb(*args[1:]))
+            
+            except exceptions.BotBlocked:
+                pass
+        
 
