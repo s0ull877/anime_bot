@@ -236,8 +236,25 @@ P.S. Однако вы все же можете приступить к прос
             return random.choice(data)[0]
 
 
+    def get_users(self, param=None) -> tuple:
+
+        with self.con.cursor() as cur:
+            if param:
+                cur.execute(
+                    "SELECT {} FROM users".format(param)
+                    )
+            else:
+                cur.execute(
+                    "SELECT * FROM users"
+                    )
+
+            data = cur.fetchall()
+
+        return data
+
+
 database = DataBase()
 
 if __name__ == '__main__':
     db = DataBase()
-    print(db.get_random_link())
+    print(db.get_users('user_id'))

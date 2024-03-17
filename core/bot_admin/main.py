@@ -11,11 +11,16 @@ import config
 from core.bot_admin.filters.is_client import IsClient
 from core.bot_admin.filters.is_private_chat import IsPrivate
 from core.bot_admin.filters.anime_in_db import InDB
+from core.bot_admin.filters.is_reply import IsReply
+from core.bot_admin.filters.is_admin import IsAdmin
+
 
 
 
 from core.bot_admin.commands.client_command import fill_channel_cmd
 from core.bot_admin.commands.user_commands import start_cmd,random_cmd
+from core.bot_admin.commands.admin_commands import allert_cmd
+
 
 from core.bot_admin.middleware.channel_join import BotJoinMiddleware
 
@@ -39,6 +44,12 @@ bot = config.bot
 dp = Dispatcher(bot,storage=MemoryStorage())
 
 
+# @dp.message_handler(IsReply())
+# async def test(message: types.Message):
+#     print(message)
+
+
+dp.register_message_handler(allert_cmd, IsAdmin(True), IsReply(), commands=['allert'])
 dp.register_message_handler(start_cmd, IsPrivate(True), commands=['start', 'help'])
 dp.register_message_handler(fill_channel_cmd, IsClient(True), commands=['fill'])
 dp.register_message_handler(random_cmd, commands=['random'])
