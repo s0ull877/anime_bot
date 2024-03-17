@@ -19,7 +19,7 @@ from core.bot_admin.filters.is_admin import IsAdmin
 
 from core.bot_admin.commands.client_command import fill_channel_cmd
 from core.bot_admin.commands.user_commands import start_cmd,random_cmd
-from core.bot_admin.commands.admin_commands import allert_cmd
+from core.bot_admin.commands.admin_commands import allert_cmd, help_cmd
 
 
 from core.bot_admin.middleware.channel_join import BotJoinMiddleware
@@ -50,6 +50,7 @@ dp = Dispatcher(bot,storage=MemoryStorage())
 
 
 dp.register_message_handler(allert_cmd, IsAdmin(True), IsReply(), commands=['allert'])
+dp.register_message_handler(help_cmd, IsAdmin(), commands=['help'])
 dp.register_message_handler(start_cmd, IsPrivate(True), commands=['start', 'help'])
 dp.register_message_handler(fill_channel_cmd, IsClient(True), commands=['fill'])
 dp.register_message_handler(random_cmd, commands=['random'])

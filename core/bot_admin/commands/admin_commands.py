@@ -45,3 +45,12 @@ async def allert_cmd(msg:Message):
                 pass
         
 
+async def help_cmd(message: Message):
+    await message.answer("""
+`/allert button_link button_text` \- команда отправляет рассылку ботом всем пользователям,
+доп\. параметры\: 
+button\_link \- добавляет кнопку с написаной ссылкой под отправленный пост
+button\_text \- текст на кнопке, по умолчанию *Переходи по ссылке*\.
+данная команда работает только на reply сообщения, выделенное сообщение отправится в рассылку
+""", parse_mode='MarkdownV2')
+
