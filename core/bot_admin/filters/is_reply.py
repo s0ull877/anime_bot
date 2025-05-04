@@ -2,11 +2,11 @@ from aiogram.dispatcher.filters import BoundFilter
 from aiogram.types.message import Message
 import config
 
-class IsClient(BoundFilter):
-    key = "is_client"
+class IsReply(BoundFilter):
+    key = "is_reply"
 
-    def __init__(self, client):
-        self.admin = client
+    def __init__(self, ans=True):
+        self.ans = ans
 
     async def check(self, msg: Message) -> bool:
-        return msg.chat.id == config.CLIENT_ID
+        return dict(msg).get('reply_to_message')
