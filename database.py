@@ -32,7 +32,7 @@ class DataBase:
                 "SELECT channel_link FROM channels WHERE channel_link = '{}'".format(channel_link)
                 )
             answer = cur.fetchone()
-       
+
         return answer
 
 
@@ -65,7 +65,7 @@ class DataBase:
         last_seria = data[-1][0]
         last_count_str = last_seria.replace('Сезон ', '').replace('Серия ','')
         last_count_list = last_count_str.split(' ')
-     
+
         if len(last_count_list) == 1:
             last_season= '1'
             last_seria = last_count_list[0]
@@ -151,18 +151,24 @@ class DataBase:
 
 # ! *****************************************COMMANDS FOR USER INTERFACE***********************************
 
-    def add_or_update_user(self,user_id,username,nickname):
+    def add_or_update_user(self, user_id, username, nickname) -> None:
+
         try:
+
             with self.con.cursor() as cur:
                 cur.execute(
-                    "INSERT INTO users (user_id, username, nickname) VALUES ('{}' , '{}', '{}')".format(user_id, username, nickname)
-                    )
+                    "INSERT INTO users (user_id, username, nickname) VALUES (%s , %s, %s, %s)", (user_id, username, nickname)
+                )
+                
         except psycopg2.errors.lookup('23505'):
+
             with self.con.cursor() as cur:
                 cur.execute(
-                    "UPDATE users SET username='{}', nickname='{}' WHERE user_id='{}'".format(username, nickname, user_id)
-                    )
+                    "UPDATE users SET username= %s, nickname= %s WHERE user_id= %s", (username, nickname, user_id)
+                )
+                
         except Exception as ex:
+
             print(ex)
 
 

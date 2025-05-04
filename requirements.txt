@@ -1,0 +1,7 @@
+aiogram==2.25.1
+telethon==1.30.3
+psycopg2_binary==2.9.9
+requests==2.31.0
+fake_useragent==1.4.0
+lxml==5.1.0
+beautifulsoup4==4.12.3
